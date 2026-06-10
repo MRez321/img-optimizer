@@ -1,0 +1,199 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+
+  --clr-black: #222831;
+  --clr-grey: #393E46;
+  --clr-blue: #00ADB5;
+  --clr-white: #EEEEEE;
+  
+  --: #;
+  --: #;
+  --: #;
+  --: #;
+  --: #;
+
+}
+
+#root {
+  border: solid 2px crimson;
+  width: 100%;
+  height: 100vh;
+}
+
+
+.main-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  
+  position: relative;
+}
+
+nav {
+  background: #EEEEEE;
+  width: 100%;
+  padding: .5rem 1rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 0px 10px 10px #000;
+}
+nav > img {
+  height: 2rem;
+}
+
+.hero-background {
+  width: 100%;
+  /* height: 80vh; */
+  aspect-ratio: 16/9;
+  /* background: url('../../public/main-page-bg.webp'); */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-size: contain;
+  
+  position: absolute;
+  top: 4rem;
+  z-index: -1;
+  border: solid 2px blue;
+}
+
+.main-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: .5rem;
+
+  width: 100%;
+  padding: 1rem;
+
+  background: rgba(53,199,213,0.5);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(53,199,213,0.25);
+
+}
+h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: var(--clr-grey);
+
+  font-family: Variable-Roman;
+  font-feature-settings: "liga", "clig off";
+  font-variant-ligatures: no-common-ligatures;
+  font-variation-settings: "wght" 165;
+  font-size: 3rem;
+  text-align: center;
+  margin: 2rem 0;
+}
+h1 > span {
+  color: var(--clr-black);
+}
+h2 {
+  display: inline-block;
+  margin: 0 auto;
+  background: #fff;
+  color: #f95540;
+  padding: .25rem .5rem;
+  line-height: 1.5rem;
+  border-radius: 6px;
+  box-shadow: -1px 1px 2px rgba(0,0,0,.27);
+  border: 1px solid rgba(0, 0, 0, .04);
+  text-align: center;
+  font-size: 1.2rem;
+  font-variation-settings: "wght" 500;
+  font-family: Variable-Roman;
+}
+h2 > span {
+  color: var(--clr-blue);
+  filter: drop-shadow(0 0 2px #fff);
+
+  /* box-shadow: 0 0 10px 1px #000;
+  border-radius: .3rem;
+  padding: .2rem .5rem; */
+}
+
+
+
+
+/* ================ */
+
+#drop-zone-wrapper {
+  position: relative;
+  min-height: 100px;
+  border-radius: 5px;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  box-shadow: 0 6px 15.98px 1.02px rgba(56,86,122,.1);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background: hsla(0, 0%, 100%, .5);
+  transform: translateZ(0);
+  z-index: 5;
+  padding: 1rem;
+  --scrollbarBG: #cfd8dc;
+  border-top-right-radius: 0;
+  --thumbBG: var(--orange);
+  overflow: hidden;
+  perspective: 1000px;}
+
+.upload-zone {
+  /* width: 90%; */
+  /* height: 20rem; */
+  /* border: dashed 1px var(--clr-black); */
+
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 16rem;
+  outline: none;
+  transition: all .5s var(--easing);
+  background-image: linear-gradient(90deg, var(--clr-blue) 50%, transparent 0), linear-gradient(90deg, var(--clr-blue) 50%, transparent 0), linear-gradient(180deg, var(--clr-blue) 50%, transparent 0), linear-gradient(180deg, var(--clr-blue) 50%, transparent 0);
+  background-color: hsla(0, 0%, 100%, .8);
+  background-position: 0 0, 0 100%, 0 0, 100% 0;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  background-size: 15px 3px, 15px 3px, 3px 15px, 3px 15px;
+  opacity: 1;
+  border-radius: 5px;
+  box-shadow: 0 0 7px 0 rgba(0,0,0,.05);
+  perspective: 600px;
+  overflow: hidden;
+}
+
+.upload-zone img {
+  transform: translateY(0);
+  animation: drop 3s cubic-bezier(0.215,0.61,0.355,1) alternate infinite;
+  filter: drop-shadow(3px 20px 4px rgba(0, 0, 0, .2));
+
+  transition: all .3s ease-out;
+  margin-top: 2rem;
+  height: 70px;
+  opacity: 1;
+}
+@keyframes drop {
+  0% {
+      transform: translateY(0);
+      filter: drop-shadow(3px 20px 4px rgba(0,0,0,.2))
+  }
+
+  to {
+      transform: translateY(15px);
+      filter: drop-shadow(3px 3px 2px rgba(0,0,0,.4))
+  }
+}
