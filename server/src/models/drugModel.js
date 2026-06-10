@@ -1,4 +1,4 @@
-const pool = require('../config/db');
+const pool = require('../config/db.ts');
 
 const toBool = (value) => {
     // Check if the value is explicitly the boolean true

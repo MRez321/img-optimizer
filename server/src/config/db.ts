@@ -1,8 +1,9 @@
-// models/db.js
-const mysql = require('mysql2/promise');
-require('dotenv').config();
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
-const dbConfig = {
+dotenv.config();
+
+const dbConfig: mysql.PoolOptions = {
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
@@ -15,17 +16,19 @@ const dbConfig = {
 const pool = mysql.createPool(dbConfig);
 
 // Optional: Test connection on startup
-async function testConnection() {
+async function testConnection(): Promise<void> {
     try {
         const connection = await pool.getConnection();
-        console.log('Successfully connected to the database.');
+        console.log('✅ Successfully connected to the database.');
         connection.release();
-    } catch (error) {
-        console.error('Database connection failed:', error.message);
-        // In a real application, you might want to handle this more gracefully
-        // or exit the process if the database is critical.
+    } catch (error: any) {
+        console.error('❌ Database connection failed:', error.message);
+        // You can choose to exit the process here if DB is critical:
+        // process.exit(1);
     }
 }
+
+// Run the test
 testConnection();
 
-module.exports = pool;
+export default pool;

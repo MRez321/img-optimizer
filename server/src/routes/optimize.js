@@ -1,11 +1,11 @@
-const express = require('express');
+// const express = require('express');
 const multer = require('multer');
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
 
-const app = express();
-const port = 3000;
+// const app = express();
+// const port = 3000;
 
 // Create a storage engine for multer to save files in user-specific folders
 const storage = multer.diskStorage({
@@ -59,6 +59,6 @@ app.post('/upload', upload.single('image'), (req, res) => {
         });
 });
 
-app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`Server is listening on port ${port}`);
+// });
