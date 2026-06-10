@@ -1,5 +1,5 @@
 // ../models/drugModel.js
-const pool = require('../config/db'); // Assuming you have a db.js config for your pool
+const pool = require('../config/db.ts'); // Assuming you have a db.ts config for your pool
 
 // Function to parse JSON fields safely
 const parseJsonField = (field) => {
