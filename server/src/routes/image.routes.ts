@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { upload } from '../services/upload.service.js';
 import { uploadController } from '../controllers/upload.controller.js';
 import { optimizeController } from '../controllers/optimize.controller.js';

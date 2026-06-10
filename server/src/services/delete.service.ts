@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { DeleteResult } from '../types/image.types';
+
+import { DeleteResult } from '../types/image.types.js';
 import { OPTIMIZED_DIR } from './optimize.service.js';
 import { UPLOADS_DIR } from './upload.service.js';
 

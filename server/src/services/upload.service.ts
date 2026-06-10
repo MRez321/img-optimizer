@@ -1,7 +1,9 @@
-import multer, { StorageEngine, FileFilterCallback } from 'multer';
+import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { Request } from 'express';
+
+import type { StorageEngine, FileFilterCallback } from 'multer';
+import type { Request } from 'express';
 
 const UPLOADS_DIR = path.join(__dirname, '../../uploads');
 const MAX_FILE_SIZE_MB = 20;

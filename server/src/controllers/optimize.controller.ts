@@ -1,5 +1,7 @@
-import { Request, Response } from 'express';
-import { optimizeAll } from '../services/optimize.service';
+
+import type { Request, Response } from 'express';
+
+import { optimizeAll } from '../services/optimize.service.js';
 
 export const optimizeController = {
   async optimizeAll(req: Request, res: Response): Promise<void> {

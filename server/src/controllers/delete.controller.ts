@@ -1,4 +1,6 @@
+
 import type { Request, Response } from 'express';
+
 import { clearAll } from '../services/delete.service.js';
 
 export const deleteController = {
