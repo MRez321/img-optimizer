@@ -1,7 +1,8 @@
 const express = require('express');
-const multer = require('multer');
+const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const multer = require('multer');
 const archiver = require('archiver');
 
 const optimizeImages = require('./src/scripts/optimize');
@@ -13,6 +14,7 @@ const downloadZipRoute = require('./src/routes/downloadZip');
 const app = express();
 const port = 3200;
 
+app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
