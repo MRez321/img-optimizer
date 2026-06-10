@@ -1,7 +1,7 @@
 import sharp from 'sharp';
 import path from 'path';
 import fs from 'fs';
-import { OptimizeResult } from '../types/image.types';
+import { OptimizeResult } from '../types/image.types.js';
 
 const OPTIMIZED_DIR = path.join(__dirname, '../../optimized');
 

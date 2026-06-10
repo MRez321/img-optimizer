@@ -1,7 +1,9 @@
 import archiver from 'archiver';
 import path from 'path';
 import fs from 'fs';
-import { Response } from 'express';
+
+import type { Response } from 'express';
+
 import { OPTIMIZED_DIR } from './optimize.service.js';
 
 /**
