@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
+
 import app from './src/app.js';
 import dbPool from './src/config/db.js';
+import './src/services/cleanupService.js';
 
 dotenv.config();
 
