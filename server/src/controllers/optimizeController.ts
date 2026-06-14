@@ -1,10 +1,17 @@
 import type { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
-import dbPool from '../config/db.js';
+import fs from 'fs/promises';
 import { ensureDir } from '../utils/fileUtils.js';
 import { processImage } from '../utils/imageProcessor.js';
 import type { ProcessOptions } from '../types/types.js';
+import {
+    createSession,
+    getSessionById,
+    insertImage,
+    updateSessionStats
+} from '../models/optimizeModel.js';
+
 
 export const startSession = async (req: Request, res: Response) => {
     const sessionId = uuidv4();
@@ -29,60 +36,69 @@ export const startSession = async (req: Request, res: Response) => {
         resize: req.body.resize || undefined
     };
 
-    await dbPool.query(
-        `INSERT INTO sessions (id, folder_name, upload_path, optimized_path, options, expires_at)
-     VALUES (?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 3 DAY))`,
-        [sessionId, folderName, uploadPath, optimizedPath, JSON.stringify(options)]
-    );
+    await createSession(sessionId, folderName, uploadPath, optimizedPath, options);
 
     res.json({ sessionId, folderName });
 };
+
 
 export const processUploadedFile = async (req: any, res: Response) => {
     const { sessionId } = req.body;
     const file = req.file;
 
-    if (!file || !sessionId) return res.status(400).json({ error: 'Missing file or sessionId' });
+    if (!file || !sessionId) {
+        return res.status(400).json({ error: 'Missing file or sessionId' });
+    }
 
     try {
-        const [sessionRows] = await dbPool.query<any[]>('SELECT * FROM sessions WHERE id = ?', [sessionId]);
-        const session = sessionRows[0];
+        const session = await getSessionById(sessionId);
         if (!session) return res.status(404).json({ error: 'Session not found' });
 
-        const optimizedDir = session.optimized_path;
-        const optimizedExt = `.${session.options ? JSON.parse(session.options).format : 'webp'}`;
+        const options = (session.options ?? {}) as ProcessOptions;
+
+        // Write buffer to disk (multer now uses memoryStorage)
+        const uploadExt = path.extname(file.originalname).toLowerCase();
+        const uploadFilename = `${uuidv4()}${uploadExt}`;
+        const uploadFilePath = path.join(session.upload_path, uploadFilename);
+        await fs.mkdir(session.upload_path, { recursive: true });
+        await fs.writeFile(uploadFilePath, file.buffer);
+
+        // Process the saved file
+        const optimizedExt = `.${options.format ?? 'webp'}`;
         const optimizedName = `${uuidv4()}${optimizedExt}`;
-        const optimizedFullPath = path.join(optimizedDir, optimizedName);
+        const optimizedFullPath = path.join(session.optimized_path, optimizedName);
+        await fs.mkdir(session.optimized_path, { recursive: true });
 
-        const options = JSON.parse(session.options || '{}') as ProcessOptions;
-        const result = await processImage(file.path, optimizedFullPath, options);
+        const result = await processImage(uploadFilePath, optimizedFullPath, options);
 
-        const savings = file.size > 0 ? ((file.size - result.size) / file.size) * 100 : 0;
+        const originalSize = file.size;
+        const savings = originalSize > 0
+            ? ((originalSize - result.size) / originalSize) * 100
+            : 0;
 
-        await dbPool.query(
-            `INSERT INTO images (id, session_id, original_name, original_size, optimized_name, optimized_size,
-                                 format, optimized_format, savings_percentage, width, height)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [uuidv4(), sessionId, file.originalname, file.size, optimizedName, result.size,
-                path.extname(file.originalname).slice(1), options.format, savings, result.width, result.height]
+        const originalFormat = uploadExt.replace('.', '');
+
+        await insertImage(
+            sessionId,
+            file.originalname,
+            originalSize,
+            optimizedName,
+            result.size,
+            originalFormat,
+            options.format ?? 'webp',
+            savings,
+            result.width,
+            result.height
         );
 
-        await dbPool.query(
-            `UPDATE sessions
-             SET total_files = total_files + 1,
-                 total_original_size = total_original_size + ?,
-                 total_optimized_size = total_optimized_size + ?,
-                 last_active = NOW()
-             WHERE id = ?`,
-            [file.size, result.size, sessionId]
-        );
+        await updateSessionStats(sessionId, originalSize, result.size);
 
         res.json({
             success: true,
             image: {
                 originalName: file.originalname,
                 optimizedName,
-                originalSize: file.size,
+                originalSize,
                 optimizedSize: result.size,
                 savings: Number(savings.toFixed(2)),
                 downloadUrl: `/data/optimized/${session.folder_name}/${optimizedName}`
