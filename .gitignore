@@ -28,3 +28,6 @@ dist-ssr
 
 A
 p.json
+
+/server/data/optimized/*
+/server/data/uploads/*
