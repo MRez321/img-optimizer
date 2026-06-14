@@ -2,7 +2,7 @@ import {useState} from 'react'
 
 // import './App.css'
 import DateAndTime from "./components/DateAndTime/DateAndTime";
-import ImageCompressor from './components/ImageCompressor';
+import ImageCompressor from './components/ImageOptimizer/ImageCompressor.tsx';
 
 
 function App() {

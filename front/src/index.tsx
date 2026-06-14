@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import UploadZone from './components/UploadZone';
-import FileTable from './components/FileTable';
-import ResultsBar from './components/ResultsBar';
-import type { CompressedFile } from './types';
+import Navbar from './components/ImageOptimizer/Navbar.tsx';
+import Hero from './components/ImageOptimizer/Hero.tsx';
+import UploadZone from './components/ImageOptimizer/UploadZone.tsx';
+import FileTable from './components/ImageOptimizer/FileTable.tsx';
+import ResultsBar from './components/ImageOptimizer/ResultsBar.tsx';
+import type { CompressedFile } from './types/types.ts';
 
 const App: React.FC = () => {
     const [files, setFiles] = useState<CompressedFile[]>([]);

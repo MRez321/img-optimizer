@@ -1,4 +1,4 @@
-import type { CompressedFile } from '../types';
+import type { CompressedFile } from '../../types/types.ts';
 
 interface FileTableProps {
     files: CompressedFile[];

@@ -1,11 +1,11 @@
 import { useState, useCallback, useRef } from 'react';
-import Navbar from './Navbar';
-import Hero from './Hero';
-import UploadZone from './UploadZone';
-import FileTable from './FileTable';
-import ResultsBar from './ResultsBar';
-import type { CompressedFile } from '../types';
-import type { UploadResult } from './UploadZone';
+import Navbar from './Navbar.tsx';
+import Hero from './Hero.tsx';
+import UploadZone from './UploadZone.tsx';
+import FileTable from './FileTable.tsx';
+import ResultsBar from './ResultsBar.tsx';
+import type { CompressedFile } from '../../types/types.ts';
+import type { UploadResult } from './UploadZone.tsx';
 
 const API_BASE = 'http://localhost:3200';
 
