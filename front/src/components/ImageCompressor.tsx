@@ -1,63 +1,75 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import Navbar from './Navbar';
 import Hero from './Hero';
 import UploadZone from './UploadZone';
 import FileTable from './FileTable';
 import ResultsBar from './ResultsBar';
 import type { CompressedFile } from '../types';
+import type { UploadResult } from './UploadZone';
+
+const API_BASE = 'http://localhost:3200';
 
 export default function ImageCompressor() {
     const [files, setFiles] = useState<CompressedFile[]>([]);
+    const sessionIdRef = useRef<string | null>(null);
 
-    const handleFilesSelected = useCallback((newFiles: File[]) => {
-        const processed: CompressedFile[] = newFiles.map((file) => ({
+    const handleUploadComplete = useCallback((result: UploadResult) => {
+        sessionIdRef.current = result.sessionId;
+
+        const completed: CompressedFile[] = result.images.map((img) => ({
             id: crypto.randomUUID(),
-            name: file.name,
-            originalSize: file.size,
-            status: 'pending',
-            originalPreview: URL.createObjectURL(file),
+            name: img.originalName,
+            originalSize: img.originalSize,
+            compressedSize: img.optimizedSize,
+            compressionRatio: img.savings,
+            status: 'completed',
+            compressedUrl: `${API_BASE}${img.downloadUrl}`,
+            downloadUrl: img.downloadUrl,
         }));
 
-        setFiles((prev) => [...prev, ...processed]);
+        const errored: CompressedFile[] = result.errors.map((e) => ({
+            id: crypto.randomUUID(),
+            name: e.name,
+            originalSize: 0,
+            status: 'error',
+        }));
 
-        // Simulate compression (replace with real API call)
-        processed.forEach((file) => {
-            setTimeout(() => {
-                setFiles((prev) =>
-                    prev.map((f) =>
-                        f.id === file.id
-                            ? {
-                                ...f,
-                                status: 'completed',
-                                compressedSize: Math.floor(f.originalSize * 0.55),
-                                compressionRatio: 45,
-                                compressedPreview: f.originalPreview, // In real app, use compressed image
-                                compressedUrl: f.originalPreview,
-                            }
-                            : f
-                    )
-                );
-            }, 1200);
-        });
+        setFiles((prev) => [...prev, ...completed, ...errored]);
     }, []);
 
     const handleDownload = (file: CompressedFile) => {
-        if (file.compressedUrl) {
+        if (!file.compressedUrl) return;
+        const a = document.createElement('a');
+        a.href = file.compressedUrl;
+        a.download = file.name;
+        a.click();
+    };
+
+    const handleDownloadAll = async () => {
+        const sessionId = sessionIdRef.current;
+        if (!sessionId) return;
+
+        try {
+            const res = await fetch(`${API_BASE}/api/optimize/zip/${sessionId}`);
+            if (!res.ok) throw new Error('Failed to get ZIP');
+
+            const data = await res.json();
             const a = document.createElement('a');
-            a.href = file.compressedUrl;
-            a.download = `compressed-${file.name}`;
+            a.href = `${API_BASE}${data.zipUrl}`;
+            a.download = `${data.folderName}.zip`;
             a.click();
+        } catch (err) {
+            console.error('ZIP download failed:', err);
         }
     };
 
-    const handleDownloadAll = () => {
-        alert('ZIP download would go here (use JSZip library for real implementation)');
+    const handleClear = () => {
+        setFiles([]);
+        sessionIdRef.current = null;
     };
 
-    const handleClear = () => setFiles([]);
-
     const handleCompare = (file: CompressedFile) => {
-        alert(`Image comparison for ${file.name} (implement side-by-side modal)`);
+        alert(`Compare: ${file.name}`);
     };
 
     return (
@@ -65,7 +77,7 @@ export default function ImageCompressor() {
             <Navbar />
             <Hero />
 
-            <UploadZone onFilesSelected={handleFilesSelected} />
+            <UploadZone onComplete={handleUploadComplete} />
 
             {files.length > 0 && (
                 <>

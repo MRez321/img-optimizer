@@ -8,4 +8,9 @@ export interface CompressedFile {
     originalPreview?: string;
     compressedPreview?: string;
     compressedUrl?: string;
+
+    sessionId?: string;
+    downloadUrl?: string;
+    width?: number;
+    height?: number;
 }

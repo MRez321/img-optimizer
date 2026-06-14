@@ -31,7 +31,14 @@ export default function FileTable({ files, onDownload, onCompare }: FileTablePro
                                         className="w-12 h-12 object-cover rounded-lg border border-gray-700"
                                     />
                                 )}
-                                <div className="font-medium truncate max-w-xs">{file.name}</div>
+                                <div>
+                                    <div className="font-medium truncate max-w-xs">{file.name}</div>
+                                    {file.width && file.height && (
+                                        <div className="text-xs text-gray-500 mt-0.5">
+                                            {file.width} × {file.height}px
+                                        </div>
+                                    )}
+                                </div>
                             </td>
                             <td className="py-5 px-6 text-gray-300">
                                 {(file.originalSize / 1024).toFixed(1)} KB
@@ -40,10 +47,13 @@ export default function FileTable({ files, onDownload, onCompare }: FileTablePro
                                 {file.status === 'compressing' && (
                                     <span className="text-amber-400">Compressing...</span>
                                 )}
-                                {file.status === 'completed' && file.compressionRatio && (
+                                {file.status === 'completed' && file.compressionRatio !== undefined && (
                                     <span className="text-emerald-400 font-medium">
-                      Saved {file.compressionRatio}%
-                    </span>
+                                            Saved {file.compressionRatio.toFixed(1)}%
+                                        </span>
+                                )}
+                                {file.status === 'error' && (
+                                    <span className="text-red-400">Failed</span>
                                 )}
                             </td>
                             <td className="py-5 px-6 text-gray-300">
@@ -62,7 +72,7 @@ export default function FileTable({ files, onDownload, onCompare }: FileTablePro
                                         </button>
                                         <button
                                             onClick={() => onDownload(file)}
-                                            className="px-5 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl transition flex items-center gap-2"
+                                            className="px-5 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl transition"
                                         >
                                             Download
                                         </button>
