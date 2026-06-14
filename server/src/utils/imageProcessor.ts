@@ -21,18 +21,33 @@ export const processImage = async (
         });
     }
 
-    const format = options.format || 'webp';
+    // Normalize format string
+    let format: string = options.format ? options.format.toLowerCase() : 'webp';
 
-    if (format === 'jpeg' || format === 'jpg') {
-        pipeline = pipeline.jpeg({ quality: options.quality, progressive: options.progressive });
-    } else if (format === 'png') {
-        pipeline = pipeline.png({ quality: options.quality, compressionLevel: options.lossless ? 9 : 6 });
-    } else if (format === 'webp') {
-        pipeline = pipeline.webp({ quality: options.quality, lossless: options.lossless });
-    } else if (format === 'tiff') {
-        pipeline = pipeline.tiff({ quality: options.quality });
-    } else if (format === 'gif') {
-        pipeline = pipeline.gif();
+    // Convert 'jpg' to 'jpeg'
+    if (format === 'jpg') {
+        format = 'jpeg';
+    }
+
+    // Apply format-specific options
+    switch (format) {
+        case 'jpeg':
+            pipeline = pipeline.jpeg({ quality: options.quality, progressive: options.progressive });
+            break;
+        case 'png':
+            pipeline = pipeline.png({ quality: options.quality, compressionLevel: options.lossless ? 9 : 6 });
+            break;
+        case 'webp':
+            pipeline = pipeline.webp({ quality: options.quality, lossless: options.lossless });
+            break;
+        case 'tiff':
+            pipeline = pipeline.tiff({ quality: options.quality });
+            break;
+        case 'gif':
+            pipeline = pipeline.gif();
+            break;
+        default:
+            throw new Error(`Unsupported format: ${format}`);
     }
 
     await pipeline.toFile(outputPath);
