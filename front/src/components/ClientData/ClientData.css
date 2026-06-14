@@ -1,0 +1,42 @@
+.ClientData {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-direction: column;
+    /* flex-wrap: wrap; */
+
+}
+
+.ClientData .bordered {
+    border: solid 2px rgb(20, 57, 220);
+    border-radius: 0.5rem;
+    background-color: #947cdb;
+    padding: 1rem;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.ClientData .bordered ul {
+    list-style: none;
+    /*gap: .5rem;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-wrap: wrap; */
+}
+
+
+.ClientData p p {
+    display: inline-block;
+}
+
+.ClientData .span {
+    border-radius: 1rem;
+    /* background-color: rgba(0, 255, 255, 0.425); */
+    padding: .5rem;
+}

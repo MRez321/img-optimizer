@@ -1,0 +1,37 @@
+.work-project-tags {
+    height: 2.5rem;
+    width: 100%;
+
+    background: rgb(56, 74, 92);
+    border-radius: .5rem;
+
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    gap: .5rem;
+    padding-inline: .5rem;
+}
+
+.web-tag,
+.app-tag,
+.react-tag,
+.node-tag {
+    color: #303030;
+    font-size: .9rem;
+    font-weight: 500;
+    padding: .2rem .4rem;
+    border-radius: .5rem;
+}
+
+.web-tag {
+    background-color: #F0DB4F;
+}
+.app-tag {
+    background-color: #ea4335;
+}
+.react-tag {
+    background-color: #61dbfb;
+}
+.node-tag {
+    background-color: #68a063;
+}

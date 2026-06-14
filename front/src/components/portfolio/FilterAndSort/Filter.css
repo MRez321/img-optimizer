@@ -1,0 +1,24 @@
+.portfolio-filters {
+    padding: .4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.portfolio-filters button {
+    background-color: #4d4ddb;
+    color: #f1f5f9;
+    margin-inline: .5rem;
+    padding: .3rem .5rem;
+    border-radius: .3rem;
+    transition: .2s;
+    font-size: 1.2rem;
+}
+
+.portfolio-filters button:hover {
+    background-color: #2a2ad1;
+}
+
+.portfolio-filters button:active {
+    scale: .9;
+}
