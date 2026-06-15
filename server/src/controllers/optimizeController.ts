@@ -4,13 +4,16 @@ import path from 'path';
 import fs from 'fs/promises';
 import { ensureDir } from '../utils/fileUtils.js';
 import { processImage } from '../utils/imageProcessor.js';
+import { createZip } from '../utils/zipBuilder.js';
+import { emitToSession } from '../services/socketService.js';
 import type { ProcessOptions } from '../types/types.js';
 import {
     createSession,
     getSessionById,
     insertImage,
-    updateSessionStats
+    incrementAndGetSession
 } from '../models/optimizeModel.js';
+import { markSessionCompleted } from '../models/sessionModel.js';
 
 
 export const startSession = async (req: Request, res: Response) => {
@@ -36,9 +39,13 @@ export const startSession = async (req: Request, res: Response) => {
         resize: req.body.resize || undefined
     };
 
-    await createSession(sessionId, folderName, uploadPath, optimizedPath, options);
+    // Client tells us how many files it intends to upload in this batch.
+    // Used to know when the batch is "done" for auto-zip + progress events.
+    const expectedFiles = Number(req.body.totalFiles) || 0;
 
-    res.json({ sessionId, folderName });
+    await createSession(sessionId, folderName, uploadPath, optimizedPath, options, expectedFiles);
+
+    res.json({ sessionId, folderName, expectedFiles });
 };
 
 
@@ -91,21 +98,78 @@ export const processUploadedFile = async (req: any, res: Response) => {
             result.height
         );
 
-        await updateSessionStats(sessionId, originalSize, result.size);
+        // Increment total_files and grab the fresh session row in one go
+        const updatedSession = await incrementAndGetSession(sessionId, originalSize, result.size);
+
+        const imageResult = {
+            originalName: file.originalname,
+            optimizedName,
+            originalSize,
+            optimizedSize: result.size,
+            savings: Number(savings.toFixed(2)),
+            width: result.width,
+            height: result.height,
+            downloadUrl: `/data/optimized/${session.folder_name}/${optimizedName}`
+        };
+
+        const completedFiles = updatedSession?.total_files ?? 0;
+        const expectedFiles = updatedSession?.expected_files ?? 0;
+
+        // Emit per-file result + progress to everyone in this session room
+        emitToSession(sessionId, 'file-processed', {
+            image: imageResult,
+            progress: {
+                completed: completedFiles,
+                expected: expectedFiles
+            }
+        });
+
+        // If we know the expected total and we've hit it, auto-build the ZIP
+        if (expectedFiles > 0 && completedFiles >= expectedFiles) {
+            try {
+                const optimizedDir = updatedSession.optimized_path;
+                const zipName = `${updatedSession.folder_name}.zip`;
+                const zipPath = path.join(optimizedDir, zipName);
+                const zipUrl = `/data/optimized/${updatedSession.folder_name}/${zipName}`;
+
+                await createZip(optimizedDir, zipPath);
+                await markSessionCompleted(sessionId);
+
+                const totalOriginal = updatedSession.total_original_size;
+                const totalOptimized = updatedSession.total_optimized_size;
+
+                emitToSession(sessionId, 'zip-ready', {
+                    zipUrl,
+                    folderName: updatedSession.folder_name,
+                    totalOriginalSize: totalOriginal,
+                    totalOptimizedSize: totalOptimized,
+                    totalSavings: totalOriginal > 0
+                        ? Number(((totalOriginal - totalOptimized) / totalOriginal * 100).toFixed(2))
+                        : 0
+                });
+            } catch (zipErr: any) {
+                console.error('Auto-zip failed:', zipErr);
+                emitToSession(sessionId, 'file-error', {
+                    stage: 'zip',
+                    message: zipErr.message || 'Failed to create ZIP'
+                });
+            }
+        }
 
         res.json({
             success: true,
-            image: {
-                originalName: file.originalname,
-                optimizedName,
-                originalSize,
-                optimizedSize: result.size,
-                savings: Number(savings.toFixed(2)),
-                downloadUrl: `/data/optimized/${session.folder_name}/${optimizedName}`
-            }
+            image: imageResult
         });
     } catch (err: any) {
         console.error(err);
+
+        // Notify the session room about this specific failure
+        emitToSession(sessionId, 'file-error', {
+            stage: 'processing',
+            originalName: file?.originalname,
+            message: err.message || 'Processing failed'
+        });
+
         res.status(500).json({ error: err.message || 'Processing failed' });
     }
 };

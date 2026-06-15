@@ -7,12 +7,13 @@ export const createSession = async (
     folderName: string,
     uploadPath: string,
     optimizedPath: string,
-    options: ProcessOptions
+    options: ProcessOptions,
+    expectedFiles: number = 0
 ) => {
     await dbPool.query(
-        `INSERT INTO sessions (id, folder_name, upload_path, optimized_path, options, expires_at)
-         VALUES (?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 3 DAY))`,
-        [sessionId, folderName, uploadPath, optimizedPath, JSON.stringify(options)]
+        `INSERT INTO sessions (id, folder_name, upload_path, optimized_path, options, expected_files, expires_at)
+         VALUES (?, ?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 3 DAY))`,
+        [sessionId, folderName, uploadPath, optimizedPath, JSON.stringify(options), expectedFiles]
     );
 };
 
@@ -59,4 +60,15 @@ export const updateSessionStats = async (
          WHERE id = ?`,
         [originalSize, optimizedSize, sessionId]
     );
+};
+
+// Returns the updated session row after incrementing total_files,
+// so the controller can check completed vs expected in one round trip.
+export const incrementAndGetSession = async (
+    sessionId: string,
+    originalSize: number,
+    optimizedSize: number
+) => {
+    await updateSessionStats(sessionId, originalSize, optimizedSize);
+    return getSessionById(sessionId);
 };

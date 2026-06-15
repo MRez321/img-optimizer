@@ -9,6 +9,10 @@ import {
 } from '../models/sessionModel.js';
 
 
+// Manual fallback endpoint - in normal flow the ZIP is auto-created
+// by optimizeController once expected_files === total_files.
+// This stays useful if expected_files was unknown (0) or the client
+// wants to re-fetch/re-create the zip.
 export const createZipDownload = async (req: Request, res: Response) => {
     const { sessionId } = req.params;
 
@@ -55,7 +59,8 @@ export const getSessionStatus = async (req: Request, res: Response) => {
         res.json({
             session,
             images,
-            isComplete: session.status === 'completed' || images.length === session.total_files
+            isComplete: session.status === 'completed'
+                || (session.expected_files > 0 && images.length >= session.expected_files)
         });
     } catch (err) {
         console.error(err);
