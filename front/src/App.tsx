@@ -2,7 +2,7 @@ import {useState} from 'react'
 
 // import './App.css'
 import DateAndTime from "./components/DateAndTime/DateAndTime";
-import ImageCompressor from './components/ImageOptimizer/ImageCompressor.tsx';
+import ImageOptimizer from './components/ImageOptimizer/ImageOptimizer.tsx';
 
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
 
     return (
         <>
-            <ImageCompressor />
+            <ImageOptimizer />
 
 
 

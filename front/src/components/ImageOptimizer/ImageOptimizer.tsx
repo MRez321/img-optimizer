@@ -4,12 +4,13 @@ import Hero from './Hero.tsx';
 import UploadZone from './UploadZone.tsx';
 import FileTable from './FileTable.tsx';
 import ResultsBar from './ResultsBar.tsx';
+import './ImageOptimizer.css'
 import type { CompressedFile } from '../../types/types.ts';
 import type { UploadResult } from './UploadZone.tsx';
 
 const API_BASE = 'http://localhost:3200';
 
-export default function ImageCompressor() {
+export default function ImageOptimizer() {
     const [files, setFiles] = useState<CompressedFile[]>([]);
     const sessionIdRef = useRef<string | null>(null);
 
@@ -73,11 +74,24 @@ export default function ImageCompressor() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-950 text-white">
+        <div className="body-wrapper">
             <Navbar />
             <Hero />
 
             <UploadZone onComplete={handleUploadComplete} />
+
+            {/*tempppppppppp*/}
+            <FileTable
+                files={files}
+                onDownload={handleDownload}
+                onCompare={handleCompare}
+            />
+            <ResultsBar
+                files={files}
+                onClear={handleClear}
+                onDownloadAll={handleDownloadAll}
+            />
+            {/*tempppppppppp*/}
 
             {files.length > 0 && (
                 <>
