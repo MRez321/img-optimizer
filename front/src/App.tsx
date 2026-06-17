@@ -1,30 +1,29 @@
-import {useState} from 'react'
+import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { Header } from './components/Header';
+import { AuthModal } from './components/AuthModal';
+import { OptimizerPage } from './pages/OptimizerPage';
+import { AccountPage } from './pages/AccountPage';
 
-// import './App.css'
 import DateAndTime from "./components/DateAndTime/DateAndTime";
-import ImageOptimizer from './components/ImageOptimizer/ImageOptimizer.tsx';
-
+// import './App.css'
 
 function App() {
-    const [count, setCount] = useState(0)
+    const [authModalOpen, setAuthModalOpen] = useState(false);
 
     return (
-        <>
-            <ImageOptimizer />
-
-
-
-            <button
-                type="button"
-                className="counter"
-                onClick={() => setCount((count) => count + 1)}
-            >
-                Count is {count}
-            </button>
-            <div className="ticks"></div>
-
-        </>
-    )
+        <AuthProvider>
+            <Header onAuthClick={() => setAuthModalOpen(true)} />
+            <main className="app-main">
+                <Routes>
+                    <Route path="/" element={<OptimizerPage />} />
+                    <Route path="/account" element={<AccountPage />} />
+                </Routes>
+            </main>
+            <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+        </AuthProvider>
+    );
 }
 
 function Rcomp() {
