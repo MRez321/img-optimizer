@@ -37,6 +37,7 @@
     --text: #9ca3af;
     --text-h: #f3f4f6;
     --bg: #c19d53 ;
+    --bg: radial-gradient(circle,rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
     --border: #2e303a;
     --code-bg: #1f2028;
     --accent: #c084fc;

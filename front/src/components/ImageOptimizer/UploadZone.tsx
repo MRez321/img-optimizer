@@ -4,8 +4,7 @@ import axios from 'axios';
 import './UploadZone.css';
 
 // import { type LucideProps } from 'lucide-react';
-import { Download, ImageDown, BrushCleaning, FileArchive, Expand, ImagePlus, Maximize2, X, ArrowDownToLine } from 'lucide-react';
-
+import { Download, ImageDown, BrushCleaning, FileArchive, Expand, ImagePlus, Maximize2, X, ArrowDownToLine, SquarePlus } from 'lucide-react';
 
 const API_BASE = 'http://localhost:3200';
 
@@ -134,14 +133,7 @@ export default function UploadZone({onComplete, options = {}}: UploadZoneProps) 
 
     return (
         <div className="upload-zone-container">
-            <Download />
-            <ImageDown />
-            <BrushCleaning />
-            <FileArchive />
-            <Expand />
-            <ImagePlus />
-            <Maximize2 />
-            <X color={'crimson'}/>
+
 
 
             <div
@@ -149,8 +141,20 @@ export default function UploadZone({onComplete, options = {}}: UploadZoneProps) 
                 className={`upload-zone ${isUploading ? 'uploading' : ''} ${isDragActive ? 'dragging' : ''}`}
             >
                 <div className="upload-icon">
-                    <ImagePlus />
-                    <ArrowDownToLine />
+                    {/*<ImagePlus />*/}
+                    {/*<ArrowDownToLine />*/}
+                    {/*<SquarePlus />*/}
+
+                    {/*<Download />*/}
+                    {/*<ImageDown />*/}
+                    {/*<BrushCleaning />*/}
+                    {/*<FileArchive />*/}
+                    {/*<Expand />*/}
+                    {/*<ImagePlus />*/}
+                    {/*<Maximize2 />*/}
+                    {/*<X color={'crimson'}/>*/}
+
+                    <SquarePlus />
 
                 </div>
 

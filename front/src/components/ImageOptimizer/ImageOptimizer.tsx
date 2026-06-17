@@ -75,12 +75,111 @@ export default function ImageOptimizer() {
 
     return (
         <div className="body-wrapper">
-            <Navbar />
-            <Hero />
+            <Navbar/>
+            <Hero/>
 
-            <UploadZone onComplete={handleUploadComplete} />
+            <UploadZone onComplete={handleUploadComplete}/>
 
             {/*tempppppppppp*/}
+
+            <div className="max-w-6xl mx-auto px-6">
+                <div className="bg-gray-900 rounded-2xl overflow-hidden border border-gray-800">
+                    <table className="w-full">
+                        <thead>
+                        <tr className="border-b border-gray-800 text-left text-sm text-gray-400">
+                            <th className="py-5 px-8 font-normal">Name</th>
+                            <th className="py-5 px-6 font-normal">Before</th>
+                            <th className="py-5 px-6 font-normal">Status</th>
+                            <th className="py-5 px-6 font-normal">After</th>
+                            <th className="py-5 px-8 font-normal text-right">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-800">
+                        <tr className="hover:bg-gray-800/50 transition">
+                            <td className="py-5 px-8 flex items-center gap-4">
+                                <div>
+                                    <div className="font-medium truncate max-w-xs">HKInKCzWwAArsY6.jpg</div>
+                                </div>
+                            </td>
+                            <td className="py-5 px-6 text-gray-300">533.1 KB</td>
+                            <td className="py-5 px-6"><span className="text-emerald-400 font-medium">Saved 38.2%</span>
+                            </td>
+                            <td className="py-5 px-6 text-gray-300">329.5 KB</td>
+                            <td className="py-5 px-8 text-right">
+                                <div className="flex gap-3 justify-end">
+                                    <button
+                                        className="px-5 py-2 text-sm border border-gray-700 hover:border-gray-500 rounded-xl transition">Compare
+                                    </button>
+                                    <button
+                                        className="px-5 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl transition">Download
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr className="hover:bg-gray-800/50 transition">
+                            <td className="py-5 px-8 flex items-center gap-4">
+                                <div>
+                                    <div className="font-medium truncate max-w-xs">HKPtldiWAAAyDmI.jpg</div>
+                                </div>
+                            </td>
+                            <td className="py-5 px-6 text-gray-300">38.8 KB</td>
+                            <td className="py-5 px-6"><span className="text-emerald-400 font-medium">Saved 45.2%</span>
+                            </td>
+                            <td className="py-5 px-6 text-gray-300">21.3 KB</td>
+                            <td className="py-5 px-8 text-right">
+                                <div className="flex gap-3 justify-end">
+                                    <button
+                                        className="px-5 py-2 text-sm border border-gray-700 hover:border-gray-500 rounded-xl transition">Compare
+                                    </button>
+                                    <button
+                                        className="px-5 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl transition">Download
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr className="hover:bg-gray-800/50 transition">
+                            <td className="py-5 px-8 flex items-center gap-4">
+                                <div>
+                                    <div className="font-medium truncate max-w-xs">Screenshot 2026-06-08 142405.png
+                                    </div>
+                                </div>
+                            </td>
+                            <td className="py-5 px-6 text-gray-300">21.5 KB</td>
+                            <td className="py-5 px-6"><span className="text-emerald-400 font-medium">Saved 19.0%</span>
+                            </td>
+                            <td className="py-5 px-6 text-gray-300">17.4 KB</td>
+                            <td className="py-5 px-8 text-right">
+                                <div className="flex gap-3 justify-end">
+                                    <button
+                                        className="px-5 py-2 text-sm border border-gray-700 hover:border-gray-500 rounded-xl transition">Compare
+                                    </button>
+                                    <button
+                                        className="px-5 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl transition">Download
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div className="max-w-6xl mx-auto px-6 mt-8 flex justify-between items-center">
+                <button className="flex items-center gap-2 px-6 py-3 text-gray-400 hover:text-white transition">Clear
+                    List
+                </button>
+                <div className="text-center">
+                    <div className="text-xl font-semibold">Total Saved: <span
+                        className="text-emerald-400">225.3 KB</span></div>
+                    <div className="text-sm text-gray-400 mt-1">38.0% reduction across 3 files</div>
+                </div>
+                <button
+                    className="flex items-center gap-3 bg-white text-black px-8 py-3 rounded-2xl font-semibold hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition">Download
+                    All as ZIP
+                </button>
+            </div>
+
+
             <FileTable
                 files={files}
                 onDownload={handleDownload}
@@ -91,7 +190,7 @@ export default function ImageOptimizer() {
                 onClear={handleClear}
                 onDownloadAll={handleDownloadAll}
             />
-            {/*tempppppppppp*/}
+            tempppppppppp
 
             {files.length > 0 && (
                 <>

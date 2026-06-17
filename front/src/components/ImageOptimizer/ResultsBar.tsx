@@ -1,4 +1,17 @@
-import type { CompressedFile } from '../../types/types.ts';
+import type {CompressedFile} from '../../types/types.ts';
+import {
+    Download,
+    ImageDown,
+    BrushCleaning,
+    FileArchive,
+    Expand,
+    ImagePlus,
+    Maximize2,
+    X,
+    ArrowDownToLine,
+    SquarePlus
+} from 'lucide-react';
+
 
 interface ResultsBarProps {
     files: CompressedFile[];
@@ -6,7 +19,7 @@ interface ResultsBarProps {
     onDownloadAll: () => void;
 }
 
-export default function ResultsBar({ files, onClear, onDownloadAll }: ResultsBarProps) {
+export default function ResultsBar({files, onClear, onDownloadAll}: ResultsBarProps) {
     const completedFiles = files.filter(f => f.status === 'completed');
 
     const totalOriginal = completedFiles.reduce((sum, f) => sum + f.originalSize, 0);
@@ -17,33 +30,67 @@ export default function ResultsBar({ files, onClear, onDownloadAll }: ResultsBar
         : '0';
 
     return (
-        <div className="max-w-6xl mx-auto px-6 mt-8 flex justify-between items-center">
-            <button
-                onClick={onClear}
-                className="flex items-center gap-2 px-6 py-3 text-gray-400 hover:text-white transition"
-            >
-                Clear List
-            </button>
+        <>
 
-            <div className="text-center">
-                <div className="text-xl font-semibold">
-                    Total Saved:{' '}
-                    <span className="text-emerald-400">{totalSavedKB} KB</span>
-                </div>
-                {totalOriginal > 0 && (
-                    <div className="text-sm text-gray-400 mt-1">
-                        {totalSavedPct}% reduction across {completedFiles.length} file{completedFiles.length !== 1 ? 's' : ''}
-                    </div>
-                )}
+            <div className="file-results">
+                <button type="button" className="ant-btn ant-btn-secondary">
+                <span role="img" aria-label="clear" className="anticon anticon-clear">
+                    <BrushCleaning/>
+                </span>
+                    <span>Clear list</span>
+                </button>
+
+                <div className="total-saved">Saved: <span>447 KB</span></div>
+
+                <form name="download" action="/download" method="GET">
+                    <input type="hidden" name="urls" value=""/>
+                    <button type="submit" className="download-optimized-zip">
+                    <span role="img" aria-label="file-zip">
+                        <FileArchive/>
+                    </span>
+                        <span>Download All</span>
+                    </button>
+                </form>
             </div>
 
-            <button
-                onClick={onDownloadAll}
-                disabled={completedFiles.length === 0}
-                className="flex items-center gap-3 bg-white text-black px-8 py-3 rounded-2xl font-semibold hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
-            >
-                Download All as ZIP
-            </button>
-        </div>
+
+            <div className="file-results">
+                <button
+                    onClick={onClear}
+                    className="clear-list-files"
+                >
+                    <span role="img" aria-label="clear" className="anticon anticon-clear">
+                        <BrushCleaning/>
+                    </span>
+                    <span>Clear list</span>
+                </button>
+
+                <div className="text-center">
+                    <div className="text-xl font-semibold">
+                        Total Saved:{' '}
+                        <span className="text-emerald-400">{totalSavedKB} KB</span>
+                    </div>
+                    {totalOriginal > 0 && (
+                        <div className="text-sm text-gray-400 mt-1">
+                            {totalSavedPct}% reduction
+                            across {completedFiles.length} file{completedFiles.length !== 1 ? 's' : ''}
+                        </div>
+                    )}
+                    <div className="total-saved">Saved: <span>447 KB</span></div>
+
+                </div>
+
+                <button
+                    onClick={onDownloadAll}
+                    disabled={completedFiles.length === 0}
+                    className="download-optimized-zip"
+                >
+                    <span role="img" aria-label="file-zip">
+                        <FileArchive/>
+                    </span>
+                    <span>Download All</span>
+                </button>
+            </div>
+        </>
     );
 }
