@@ -39,7 +39,7 @@ export const OptimizerPage = () => {
     onFileProcessed: ({ image }) => {
       // Match by originalName to the first file still marked "processing"
       const target = queueRef.current.find(
-        (f) => f.file.name === image.originalName && (f.status === 'processing' || f.status === 'uploading')
+          (f) => f.file.name === image.originalName && (f.status === 'processing' || f.status === 'uploading')
       );
       if (target) {
         updateFile(target.id, { status: 'done', result: image });
@@ -47,7 +47,7 @@ export const OptimizerPage = () => {
     },
     onFileError: ({ originalName, message }) => {
       const target = queueRef.current.find(
-        (f) => f.file.name === originalName && (f.status === 'processing' || f.status === 'uploading')
+          (f) => f.file.name === originalName && (f.status === 'processing' || f.status === 'uploading')
       );
       if (target) {
         updateFile(target.id, { status: 'error', errorMessage: message });
@@ -109,7 +109,7 @@ export const OptimizerPage = () => {
 
       setSessionId(newSessionId);
       setExpected(expectedFiles);
-      joinSession(newSessionId);
+      await joinSession(newSessionId);
 
       // Upload sequentially - matches the backend's single-file endpoint design
       for (const item of pending) {
@@ -154,64 +154,64 @@ export const OptimizerPage = () => {
   const hasActivity = queue.length > 0;
 
   return (
-    <div className="optimizer">
-      <section className="hero">
-        <h1 className="hero__title">
-          Shrink images.
-          <br />
-          <span className="hero__title-accent">Keep the detail.</span>
-        </h1>
-        <p className="hero__subtitle">
-          Drop in a batch, pick a format, watch every file compress in real time.
-        </p>
-      </section>
+      <div className="optimizer">
+        <section className="hero">
+          <h1 className="hero__title">
+            Shrink images.
+            <br />
+            <span className="hero__title-accent">Keep the detail.</span>
+          </h1>
+          <p className="hero__subtitle">
+            Drop in a batch, pick a format, watch every file compress in real time.
+          </p>
+        </section>
 
-      <div className="optimizer__layout">
-        <div className="optimizer__main">
-          <Dropzone onFiles={handleFiles} disabled={running} />
+        <div className="optimizer__layout">
+          <div className="optimizer__main">
+            <Dropzone onFiles={handleFiles} disabled={running} />
 
-          {hasActivity && (
-            <div className="queue-panel">
-              <div className="queue-panel__header">
-                <span>{queue.length} file{queue.length !== 1 ? 's' : ''}</span>
-                <button className="icon-btn" onClick={clearAll} disabled={running} title="Clear all">
-                  <Trash2 size={14} />
-                </button>
-              </div>
+            {hasActivity && (
+                <div className="queue-panel">
+                  <div className="queue-panel__header">
+                    <span>{queue.length} file{queue.length !== 1 ? 's' : ''}</span>
+                    <button className="icon-btn" onClick={clearAll} disabled={running} title="Clear all">
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
 
-              <div className="queue-panel__list">
-                {queue.map((item) => (
-                  <FileRow key={item.id} item={item} onRemove={removeFile} />
-                ))}
-              </div>
+                  <div className="queue-panel__list">
+                    {queue.map((item) => (
+                        <FileRow key={item.id} item={item} onRemove={removeFile} />
+                    ))}
+                  </div>
 
-              {queuedCount > 0 && (
-                <button className="btn btn--primary btn--full" onClick={startCompression} disabled={running}>
-                  <Zap size={16} />
-                  {running ? 'Compressing…' : `Compress ${queuedCount} file${queuedCount !== 1 ? 's' : ''}`}
-                </button>
-              )}
+                  {queuedCount > 0 && (
+                      <button className="btn btn--primary btn--full" onClick={startCompression} disabled={running}>
+                        <Zap size={16} />
+                        {running ? 'Compressing…' : `Compress ${queuedCount} file${queuedCount !== 1 ? 's' : ''}`}
+                      </button>
+                  )}
 
-              {(sessionId || completedCount > 0) && (
-                <SummaryBar
-                  completed={completedCount}
-                  expected={expected}
-                  totalOriginal={totalOriginal}
-                  totalOptimized={totalOptimized}
-                  zipData={zipData}
-                  connected={connected}
-                  onManualZip={handleManualZip}
-                  zipRequestable={!!sessionId}
-                />
-              )}
-            </div>
-          )}
+                  {(sessionId || completedCount > 0) && (
+                      <SummaryBar
+                          completed={completedCount}
+                          expected={expected}
+                          totalOriginal={totalOriginal}
+                          totalOptimized={totalOptimized}
+                          zipData={zipData}
+                          connected={connected}
+                          onManualZip={handleManualZip}
+                          zipRequestable={!!sessionId}
+                      />
+                  )}
+                </div>
+            )}
+          </div>
+
+          <aside className="optimizer__sidebar">
+            <OptionsPanel options={options} onChange={setOptions} disabled={running} />
+          </aside>
         </div>
-
-        <aside className="optimizer__sidebar">
-          <OptionsPanel options={options} onChange={setOptions} disabled={running} />
-        </aside>
       </div>
-    </div>
   );
 };

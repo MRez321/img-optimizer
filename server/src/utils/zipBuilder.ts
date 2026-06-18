@@ -32,11 +32,26 @@ const readDirectoryRecursive = async (
     return zipObject;
 };
 
+// fflate's zip() is callback-based (data, opts, cb), not promise-based.
+// This wraps it properly instead of awaiting it directly (which throws
+// "no callback" / error code 7, since the callback is never passed).
+const zipAsync = (data: Zippable): Promise<Uint8Array> => {
+    return new Promise((resolve, reject) => {
+        zip(data, {}, (err, zipped) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(zipped);
+            }
+        });
+    });
+};
+
 export const createZip = async (sourceDir: string, zipPath: string): Promise<void> => {
     try {
         const zipData: Zippable = await readDirectoryRecursive(sourceDir, {}, sourceDir);
 
-        const zippedContent = await zip(zipData);
+        const zippedContent = await zipAsync(zipData);
 
         await fsWriteFile(zipPath, zippedContent);
         console.log(`Successfully created zip file at: ${zipPath}`);
