@@ -18,20 +18,33 @@ export const useOptimizerSocket = ({ onFileProcessed, onFileError, onZipReady }:
     const socket = io(API_BASE, { withCredentials: true });
     socketRef.current = socket;
 
-    socket.on('connect', () => {
+    const handleConnect = () => {
       setConnected(true);
-      // Rejoin the room if we reconnected mid-session
       if (sessionIdRef.current) {
         socket.emit('join-session', sessionIdRef.current);
       }
-    });
+    };
+    const handleDisconnect = () => setConnected(false);
 
-    socket.on('disconnect', () => setConnected(false));
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
     socket.on('file-processed', onFileProcessed);
     socket.on('file-error', onFileError);
     socket.on('zip-ready', onZipReady);
 
     return () => {
+      // Remove listeners explicitly before disconnecting - in dev,
+      // React.StrictMode mounts every component twice (mount -> cleanup
+      // -> mount again) to surface effect bugs. Without this, the first
+      // socket's listeners can still be attached when it disconnects,
+      // and a half-torn-down socket A can overlap with the real socket B
+      // created on the second mount, causing the very first session's
+      // events to land inconsistently.
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+      socket.off('file-processed', onFileProcessed);
+      socket.off('file-error', onFileError);
+      socket.off('zip-ready', onZipReady);
       socket.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
