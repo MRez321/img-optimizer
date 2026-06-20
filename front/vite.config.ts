@@ -11,4 +11,9 @@ export default defineConfig({
         babel({presets: [reactCompilerPreset()]}),
         tailwindcss(),
     ],
+    base: './',           // ← Important for relative paths
+    build: {
+        outDir: 'dist',
+        assetsDir: 'assets',   // default, but explicit is good
+    }
 })
