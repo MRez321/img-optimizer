@@ -29,12 +29,6 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 const publicPath = path.join(process.cwd(), 'public');
 app.use(express.static(publicPath));
 
-// Optional: fallback for SPA routing
-app.get('*', (req, res) => {
-    res.sendFile(path.join(publicPath, 'index.html'));
-});
-
-
 
 app.use('/data', express.static(path.join(process.cwd(), 'data'), {
     setHeaders: (res) => {

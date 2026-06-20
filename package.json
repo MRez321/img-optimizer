@@ -5,12 +5,13 @@
   "scripts": {
     "build:front": "cd front && npm run build",
     "build:server": "cd server && npm run build",
-    "build": "npm run build:front && npm run build:server && npm run copy:frontend",
-    "copy:frontend": "node scripts/copy-frontend.js",
-    "deploy:prepare": "npm run build",
-    "clean": "rm -rf server/dist front/dist"
+    "build": "npm run clean && npm run build:front && npm run build:server && npm run prepare:dist",
+    "prepare:dist": "node scripts/prepare-deploy.js",
+    "clean": "rimraf dist front/dist server/dist",
+    "deploy:prepare": "npm run build"
   },
   "devDependencies": {
-    "fs-extra": "^11.2.0"
+    "fs-extra": "^11.2.0",
+    "rimraf": "^6.0.1"
   }
 }
