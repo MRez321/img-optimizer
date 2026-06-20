@@ -23,7 +23,19 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Serve static files
-app.use(express.static(path.join(process.cwd(), 'public')));
+
+// app.use(express.static(path.join(process.cwd(), 'public')));
+
+const publicPath = path.join(process.cwd(), 'public');
+app.use(express.static(publicPath));
+
+// Optional: fallback for SPA routing
+app.get('*', (req, res) => {
+    res.sendFile(path.join(publicPath, 'index.html'));
+});
+
+
+
 app.use('/data', express.static(path.join(process.cwd(), 'data'), {
     setHeaders: (res) => {
         res.set('Cache-Control', 'public, max-age=3600'); // 1 hour cache
