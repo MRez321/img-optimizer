@@ -11,7 +11,8 @@ export const processImage = async (
     let pipeline = sharp(inputPath);
 
     if (options.stripMetadata) {
-        pipeline = pipeline.withMetadata(false);
+        // pipeline = pipeline.withMetadata(false);
+        pipeline = pipeline.withMetadata({});  // Empty object removes most metadata
     }
 
     if (options.resize) {

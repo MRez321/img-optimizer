@@ -1,0 +1,16 @@
+{
+  "name": "img-optimizer",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:front": "cd front && npm run build",
+    "build:server": "cd server && npm run build",
+    "build": "npm run build:front && npm run build:server && npm run copy:frontend",
+    "copy:frontend": "node scripts/copy-frontend.js",
+    "deploy:prepare": "npm run build",
+    "clean": "rm -rf server/dist front/dist"
+  },
+  "devDependencies": {
+    "fs-extra": "^11.2.0"
+  }
+}

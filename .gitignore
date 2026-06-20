@@ -25,9 +25,16 @@ dist-ssr
 *.sw?
 
 .env
+/.env
+server/.env
+front/.env
 
 A
 p.json
 
 /server/data/optimized/*
 /server/data/uploads/*
+
+/dist
+server/dist
+front/dist

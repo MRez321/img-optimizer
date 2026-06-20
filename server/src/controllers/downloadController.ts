@@ -14,7 +14,7 @@ import {
 // This stays useful if expected_files was unknown (0) or the client
 // wants to re-fetch/re-create the zip.
 export const createZipDownload = async (req: Request, res: Response) => {
-    const { sessionId } = req.params;
+    const { sessionId }: any = req.params;
 
     try {
         const session = await getSessionById(sessionId);
@@ -48,7 +48,7 @@ export const createZipDownload = async (req: Request, res: Response) => {
 
 
 export const getSessionStatus = async (req: Request, res: Response) => {
-    const { sessionId } = req.params;
+    const { sessionId }: any  = req.params;
 
     try {
         const session = await getSessionById(sessionId);
