@@ -25,7 +25,7 @@ export const Header = ({ onAuthClick }: { onAuthClick: () => void }) => {
           <Layers size={18} strokeWidth={2.4} />
         </span>
         <span className="header__brand-text">
-          press<span className="header__brand-accent">.</span>
+          PixelStar<span className="header__brand-accent">.</span>
         </span>
       </Link>
 

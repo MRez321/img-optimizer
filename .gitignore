@@ -8,7 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
+#dist
 dist-ssr
 *.local
 
@@ -35,6 +35,6 @@ p.json
 /server/data/optimized/*
 /server/data/uploads/*
 
-/dist
+#/dist
 server/dist
 front/dist
