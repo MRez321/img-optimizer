@@ -11,13 +11,32 @@ import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 
-// NOTE: cors credentials must be true so the browser sends/receives
-// the httpOnly auth cookies. With credentials: true, origin can't be '*' -
-// set CORS_ORIGIN to your frontend's actual URL (e.g. http://localhost:5173).
+
+
+
+// === UPDATED CORS CONFIGURATION ===
+const allowedOrigins = [
+    process.env.CORS_ORIGIN,
+    'http://localhost:5173',   // Vite dev
+    'http://localhost:3200',   // if you ever run backend on 3200
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:3200',
+    'https://pixelstar.ir',
+].filter(Boolean); // remove undefined/null
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // Allow requests with no origin (like mobile apps, curl, Postman)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.warn(`CORS blocked origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
 }));
+// ==================================
 app.use(cookieParser());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));

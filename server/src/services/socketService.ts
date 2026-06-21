@@ -4,10 +4,26 @@ import dbPool from '../config/db.js';
 
 let io: SocketIOServer | null = null;
 
+const allowedOrigins = [
+    process.env.CORS_ORIGIN,
+    'http://localhost:5173',
+    'http://localhost:3200',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:3200',
+    'https://pixelstar.ir',
+].filter(Boolean); // remove undefined/null
+
 export const initSocket = (httpServer: HTTPServer): SocketIOServer => {
     io = new SocketIOServer(httpServer, {
         cors: {
-            origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+            origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+                if (!origin || allowedOrigins.includes(origin)) {  // reuse the same array if you want
+                    callback(null, true);
+                } else {
+                    console.warn(`Socket.IO CORS blocked origin: ${origin}`);
+                    callback(new Error('Not allowed by CORS'));
+                }
+            },
             credentials: true,
         },
     });
