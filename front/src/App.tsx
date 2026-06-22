@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { Header } from './components/Header';
 import { AuthModal } from './components/AuthModal';
 import { Footer } from './components/Footer';
+import { InstallBanner } from './components/InstallBanner';
 import { OptimizerPage } from './pages/OptimizerPage';
 import { AccountPage } from './pages/AccountPage';
 
@@ -13,6 +14,7 @@ function App() {
   return (
     <AuthProvider>
       <Header onAuthClick={() => setAuthModalOpen(true)} />
+      <InstallBanner />
       <main className="app-main">
         <Routes>
           <Route path="/" element={<OptimizerPage />} />
