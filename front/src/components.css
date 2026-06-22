@@ -1323,3 +1323,135 @@
     padding: 7px 10px;
   }
 }
+
+/* ============ Footer ============ */
+
+.footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding: 28px 32px 20px;
+}
+
+.footer__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer__brand-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0e0f12;
+  flex-shrink: 0;
+}
+
+.footer__brand-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.footer__brand-accent {
+  color: var(--accent);
+}
+
+.footer__brand-sep {
+  color: var(--text-faint);
+  font-size: 0.8rem;
+}
+
+.footer__brand-tagline {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.footer__links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer__link {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer__link:hover {
+  color: var(--text);
+}
+
+.footer__dev {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer__dev-label {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.footer__dev-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer__dev-link:hover {
+  color: var(--accent);
+}
+
+.footer__year {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+}
+
+.footer__bottom {
+  max-width: 1180px;
+  margin: 14px auto 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .footer {
+    padding: 24px 16px 16px;
+  }
+
+  .footer__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .footer__brand-tagline,
+  .footer__brand-sep {
+    display: none;
+  }
+}
