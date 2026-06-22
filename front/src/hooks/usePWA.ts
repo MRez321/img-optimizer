@@ -5,9 +5,21 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+const INSTALLED_KEY = 'pwa-installed';
+
+const checkIsInstalled = (): boolean => {
+  // Already installed as standalone PWA
+  if (window.matchMedia('(display-mode: standalone)').matches) return true;
+  // iOS Safari standalone
+  if ((window.navigator as any).standalone === true) return true;
+  // User accepted the prompt in a previous session
+  if (localStorage.getItem(INSTALLED_KEY) === 'true') return true;
+  return false;
+};
+
 export const usePWA = () => {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(checkIsInstalled);
 
   useEffect(() => {
     // Register service worker
@@ -18,27 +30,29 @@ export const usePWA = () => {
         .catch((err) => console.error('[PWA] Service worker registration failed:', err));
     }
 
-    // Capture the browser's install prompt before it fires automatically.
-    // We preventDefault() to suppress the default mini-bar so we can
-    // trigger it ourselves at the right moment with our own button.
+    // If already installed, don't bother capturing the prompt at all
+    if (checkIsInstalled()) {
+      setIsInstalled(true);
+      return;
+    }
+
     const handler = (e: Event) => {
       e.preventDefault();
       setInstallPrompt(e as BeforeInstallPromptEvent);
     };
 
-    // Detect if already installed (standalone mode = already a PWA)
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setIsInstalled(true);
-    }
-
-    window.addEventListener('beforeinstallprompt', handler);
-    window.addEventListener('appinstalled', () => {
+    const installedHandler = () => {
+      localStorage.setItem(INSTALLED_KEY, 'true');
       setIsInstalled(true);
       setInstallPrompt(null);
-    });
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('appinstalled', installedHandler);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('appinstalled', installedHandler);
     };
   }, []);
 
@@ -47,6 +61,12 @@ export const usePWA = () => {
 
     await installPrompt.prompt();
     const { outcome } = await installPrompt.userChoice;
+
+    if (outcome === 'accepted') {
+      localStorage.setItem(INSTALLED_KEY, 'true');
+      setIsInstalled(true);
+    }
+
     setInstallPrompt(null);
     return outcome;
   };

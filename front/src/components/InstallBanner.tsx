@@ -2,9 +2,13 @@ import { useState } from 'react';
 import { Download, X } from 'lucide-react';
 import { usePWA } from '../hooks/usePWA';
 
+const DISMISSED_KEY = 'pwa-banner-dismissed';
+
 export const InstallBanner = () => {
   const { canInstall, triggerInstall } = usePWA();
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(
+    () => localStorage.getItem(DISMISSED_KEY) === 'true'
+  );
   const [installing, setInstalling] = useState(false);
 
   if (!canInstall || dismissed) return null;
@@ -13,7 +17,11 @@ export const InstallBanner = () => {
     setInstalling(true);
     const outcome = await triggerInstall();
     if (outcome === 'dismissed') setInstalling(false);
-    // If accepted, canInstall flips to false automatically via 'appinstalled' event
+  };
+
+  const handleDismiss = () => {
+    localStorage.setItem(DISMISSED_KEY, 'true');
+    setDismissed(true);
   };
 
   return (
@@ -34,7 +42,7 @@ export const InstallBanner = () => {
       </button>
       <button
         className="install-banner__dismiss"
-        onClick={() => setDismissed(true)}
+        onClick={handleDismiss}
         aria-label="Dismiss"
       >
         <X size={14} />
