@@ -1170,3 +1170,156 @@
   font-size: 0.8rem;
   color: var(--mint);
 }
+
+/* ============ Header actions (updated layout with GitHub widget) ============ */
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── GitHub repo widget ─────────────────────────────────────────────────── */
+
+.header__github {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.header__github-link,
+.header__github-star {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  background: var(--bg-elevated);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.header__github-link:hover {
+  background: var(--bg-inset);
+  color: var(--text);
+}
+
+.header__github-star {
+  border-left: 1px solid var(--border);
+  color: var(--accent);
+}
+
+.header__github-star:hover {
+  background: var(--accent-glow);
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .header__github span {
+    display: none;
+  }
+  .header__github-link,
+  .header__github-star {
+    padding: 7px 9px;
+  }
+}
+
+/* ── Auth modal OAuth buttons ───────────────────────────────────────────── */
+
+.modal__oauth {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.modal__google {
+  display: flex;
+  justify-content: center;
+}
+
+.modal__oauth {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.modal__github-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: #161b22;
+  border: 1px solid #30363d;
+  color: #e6edf3;
+  padding: 11px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.modal__github-btn:hover {
+  background: #21262d;
+  border-color: #8b949e;
+}
+
+/* ============ Header GitHub widget ============ */
+
+.header__github {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.header__github-link,
+.header__github-star {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.header__github-link {
+  border-right: 1px solid var(--border);
+}
+
+.header__github-link:hover {
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+.header__github-star {
+  color: var(--accent);
+}
+
+.header__github-star:hover {
+  background: var(--accent-glow);
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .header__github span {
+    display: none;
+  }
+  .header__github-link,
+  .header__github-star {
+    padding: 7px 10px;
+  }
+}
