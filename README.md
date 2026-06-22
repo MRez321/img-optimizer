@@ -141,6 +141,6 @@ Click **Compress N files**. Each file shows a bar that shrinks to its actual com
 
 <div align="center">
 
-Made with ☕ by [MRez321](https://github.com/MRez321)
+Made with ❤️ by [MRez321](https://github.com/MRez321)
 
 </div>
