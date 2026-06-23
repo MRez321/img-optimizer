@@ -15,6 +15,8 @@ no installs, no sign-up required.
 
 </div>
 
+<img width="1918" height="893" alt="image" src="https://github.com/user-attachments/assets/bf6e2433-e30a-457a-a576-866522b3080c" />
+
 ---
 
 ## What is PixelStar?
